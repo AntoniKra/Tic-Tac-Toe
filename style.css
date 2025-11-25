@@ -1,0 +1,15 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#Gameboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 300px;
+}
+
+.box {
+  border: solid 2px black;
+  aspect-ratio: 1;
+}

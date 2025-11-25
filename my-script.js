@@ -1,3 +1,12 @@
+const boxes = document.querySelectorAll(".box");
+
+boxes.forEach((box, index) => {
+  box.addEventListener("click", () => {
+    GameController.playRound(index);
+    console.log(index);
+  });
+});
+
 const Gameboard = (function () {
   const board = ["", "", "", "", "", "", "", "", ""];
 
@@ -39,8 +48,8 @@ const GameController = (function () {
   };
 
   const checkWinner = (board) => {
-    for (let i = 0; i < winnerCombinations.length; i++) {
-      const [a, b, c] = winnerCombinations[i];
+    for (let element of winnerCombinations) {
+      const [a, b, c] = element;
 
       if (board[a] !== "" && board[a] === board[c] && board[a] === board[b]) {
         return true;
