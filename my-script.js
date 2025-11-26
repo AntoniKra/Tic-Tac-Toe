@@ -1,10 +1,15 @@
 const boxes = document.querySelectorAll(".box");
+const restartButton = document.getElementById("restart");
+const text = document.getElementById("text-space");
 
 boxes.forEach((box, index) => {
   box.addEventListener("click", () => {
     GameController.playRound(index);
-    console.log(index);
   });
+});
+
+restartButton.addEventListener("click", () => {
+  GameController.resetGame();
 });
 
 const Gameboard = (function () {
@@ -18,6 +23,10 @@ const Gameboard = (function () {
     placeMark: function (index, mark) {
       board[index] = mark;
     },
+
+    resetBoard: function () {
+      board.fill("");
+    },
   };
 })();
 
@@ -28,7 +37,10 @@ function createPlayer(name, mark) {
 const GameController = (function () {
   const player1 = createPlayer("Ricardo", "X");
   const player2 = createPlayer("Cristiano", "O");
-  const players = [player1, player2];
+
+  let activePlayer = player1;
+  let isGameOver = false;
+
   const winnerCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -40,11 +52,10 @@ const GameController = (function () {
     [2, 4, 6],
   ];
 
-  let activePlayer = player1;
-
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === player1 ? player2 : player1;
     console.log("Kolej gracza:", activePlayer);
+    text.textContent = `Kolej gracza: ${activePlayer.name}`;
   };
 
   const checkWinner = (board) => {
@@ -63,18 +74,38 @@ const GameController = (function () {
   };
 
   const playRound = (index) => {
+    if (isGameOver) return;
+
     const board = Gameboard.getBoard();
 
     if (board[index] === "") {
       Gameboard.placeMark(index, activePlayer.mark);
 
+      boxes[index].textContent = activePlayer.mark;
+
       if (checkWinner(board)) {
+        isGameOver = true;
         console.log(`wygrałeś: ${activePlayer.name}`);
+        text.textContent = `Wygrałeś: ${activePlayer.name}`;
+        return;
+      } else if (!board.includes("")) {
+        isGameOver = true;
+        console.log("Remis");
+        text.textContent = "Remis";
         return;
       }
       switchPlayerTurn();
     }
   };
 
-  return { switchPlayerTurn, getActivePlayer, playRound };
+  const resetGame = () => {
+    Gameboard.resetBoard();
+    isGameOver = false;
+    activePlayer = player1;
+    boxes.forEach((box) => {
+      box.textContent = "";
+    });
+  };
+
+  return { switchPlayerTurn, getActivePlayer, playRound, resetGame };
 })();
