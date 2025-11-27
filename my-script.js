@@ -102,6 +102,7 @@ const GameController = (function () {
     Gameboard.resetBoard();
     isGameOver = false;
     activePlayer = player1;
+    text.textContent = `Kolej gracza: ${activePlayer.name}`;
     boxes.forEach((box) => {
       box.textContent = "";
     });
